@@ -4,6 +4,7 @@ import random
 import sys
 import time
 
+from configparser import ConfigParser
 from generator.gpt2.gpt2_generator import *
 from story import grammars
 from story.story_manager import *
@@ -19,6 +20,8 @@ from banners.bannerRan import *
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
+parser = ConfigParser()
+parser.read('config.ini')
 
 def splash():
     print("0) New Game\n1) Load Game\n")
@@ -197,7 +200,7 @@ def instructions():
     text += '\n                    (not compatible with Colab)'
     text += '\n  "/infto ##"       Set a timeout for the AI to respond.'
     text += '\n  "/temp #.#"       Changes the AI\'s temperature'
-    text += '\n                    (higher temperature = less focused). Default is 0.4.'
+    text += '\n                    (higher temperature = less focused). Default is 0.4'
     text += '\n  "/top ##"         Changes the AI\'s top_p. Default is 0.9.'
     text += '\n  "/raw off/on"     Changes whether to feed the AI raw text instead of CYOA, interprets \\n as newline. (default off).'
     text += '\n  "/remember XXX"   Commit something important to the AI\'s memory for that session.'
@@ -261,8 +264,8 @@ def play_aidungeon_2():
                     story_manager.generator = generator
                 change_config = input("Would you like to enter a new temp and top_p now? (default: 0.4, 0.9) (y/N) ")
                 if change_config.lower() == "y":
-                    story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or 0.4))
-                    story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or 0.9))
+                    story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
+                    story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
                     console_print("Please wait while the AI model is regenerated...")
                     story_manager.generator.gen_output()
                 console_print(instructions())
