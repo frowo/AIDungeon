@@ -1,11 +1,16 @@
 import json
 import os
 import warnings
-
+import sys
+from configparser import ConfigParser
 import numpy as np
 import tensorflow as tf
 from generator.gpt2.src import encoder, model, sample
 from story.utils import *
+
+sys.path.append('AIDungeon/config.ini')
+parser = ConfigParser()
+parser.read('config.ini')
 
 warnings.filterwarnings("ignore")
 
@@ -13,7 +18,7 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 class GPT2Generator:
-    def __init__(self, generate_num=80, temperature=0.9, top_p=0.4, censor=False, raw=False, model_name="model_v5"):
+    def __init__(self, generate_num=80, temperature=parser.getfloat('values', 'temp'), top_p=parser.getfloat('values', 'top_p'), censor=False, raw=False, model_name="model_v5"):
         self.generate_num = generate_num
         self.default_gen_num = generate_num
         self.temp = temperature
