@@ -209,25 +209,25 @@ def instructions():
 
 
 def play_aidungeon_2():
-    console_print(
-        "AI Dungeon 2 will save and use your actions and game to continually improve AI Dungeon."
-        + " If you would like to disable this enter '/saving off' as an action. This will also turn off the "
-        + "ability to save games."
-    )
+#    console_print(
+#        "AI Dungeon 2 will save and use your actions and game to continually improve AI Dungeon."
+#        + " If you would like to disable this enter '/saving off' as an action. This will also turn off the "
+#        + "ability to save games."
+#    )
 
     upload_story = True
     ping = False
     generator = None
-    autosave = False
+    autosave = parser.get('values', 'autosave')
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
     print("\n")
 
-    ranBanner =  bannerRan()
-    openingPass = (ranBanner.banner_number)
-
-    with open(openingPass, "r", encoding="utf-8") as file:
-        starter = file.read()
-    print(starter)
+#    ranBanner =  bannerRan()
+#    openingPass = (ranBanner.banner_number)
+#
+#    with open(openingPass, "r", encoding="utf-8") as file:
+#        starter = file.read()
+#    print(starter)
 
     while True:
         if story_manager.story is not None:
@@ -268,7 +268,7 @@ def play_aidungeon_2():
                     story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
                     console_print("Please wait while the AI model is regenerated...")
                     story_manager.generator.gen_output()
-                console_print(instructions())
+                console_print("If you need a list of all available commands type /help"")
                 print("\nGenerating story...")
                 story_manager.generator.generate_num = 120
                 story_manager.start_new_story(
