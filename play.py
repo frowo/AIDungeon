@@ -268,7 +268,7 @@ def play_aidungeon_2():
                     story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
                     console_print("Please wait while the AI model is regenerated...")
                     story_manager.generator.gen_output()
-                console_print("If you need a list of all available commands type /help"")
+                console_print("If you need a list of all available commands type /help")
                 print("\nGenerating story...")
                 story_manager.generator.generate_num = 120
                 story_manager.start_new_story(
