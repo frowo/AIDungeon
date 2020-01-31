@@ -245,29 +245,37 @@ def play_aidungeon_2():
                 else:
                     context, prompt = get_curated_exposition(setting_key, character_key, name, character, setting_description)
                 if generator is None:
-                    generator_config = input("Would you like to select a different generator? (default: model_v5) (y/N) ")
-                    if generator_config.lower() == "y":
-                        try:
-                            model_name = input("Model name: ")
-                            console_print("Use raw narrative text as input for this model instead of CYOA prompts?")
-                            console_print("Example user input in raw mode: He took the beast by the horns and ripped out its eyes.\\n In the distance, a horn sounded.")
-                            console_print("Example user input in regular mode: > Take beast by horns and rip out its eyes.")
-                            use_raw = input("y/N ")
-                            print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
-                            generator = GPT2Generator(model_name=model_name, raw=use_raw.lower()=="y")
-                        except:
-                            console_print("Failed to set model. Make sure it is installed in generator/gpt2/models/")
-                            continue
-                    else:
-                        print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                    if parser['values']['model-config'] == "False":
                         generator = GPT2Generator()
+                    elif parser['values']['model-config'] == "True":
+                        generator_config = input("Would you like to select a different generator? (default: model_v5) (y/N) ")
+                        if generator_config.lower() == "y":
+                            try:
+                                model_name = input("Model name: ")
+                                console_print("Use raw narrative text as input for this model instead of CYOA prompts?")
+                                console_print("Example user input in raw mode: He took the beast by the horns and ripped out its eyes.\\n In the distance, a horn sounded.")
+                                console_print("Example user input in regular mode: > Take beast by horns and rip out its eyes.")
+                                use_raw = input("y/N ")
+                                print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                                generator = GPT2Generator(model_name=model_name, raw=use_raw.lower()=="y")
+                            except:
+                                console_print("Failed to set model. Make sure it is installed in generator/gpt2/models/")
+                                continue
+                        else:
+                            print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                            generator = GPT2Generator()
                     story_manager.generator = generator
-                change_config = input("Would you like to enter a new temp and top_p now? (default: 0.4, 0.9) (y/N) ")
-                if change_config.lower() == "y":
-                    story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
-                    story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
-                    console_print("Please wait while the AI model is regenerated...")
+                if parser['values']['temp-config'] == "False":
+                    story_manager.generator.change_temp(float(parser.get('values', 'temp')))
+                    story_manager.generator.change_top_p(float(parser.get('values', 'top_p')))
                     story_manager.generator.gen_output()
+                elif parser['values']['temp-config'] == "True":
+                    change_config = input("Would you like to enter a new temp and top_p now? (default: 0.4, 0.9) (y/N) ")
+                    if change_config.lower() == "y":
+                        story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
+                        story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
+                        console_print("Please wait while the AI model is regenerated...")
+                        story_manager.generator.gen_output()
                 console_print("If you need a list of all available commands type /help")
                 print("\nGenerating story...")
                 story_manager.generator.generate_num = 120
