@@ -322,7 +322,6 @@ def play_aidungeon_2():
                 command = split[0].lower()
                 args = split[1:]
                 if command == "reset":
-                    story_manager.story.get_rating()
                     story_manager.print_save()
                     break
 
@@ -334,7 +333,6 @@ def play_aidungeon_2():
                     continue
 
                 elif command == "quit":
-                    story_manager.story.get_rating()
                     exit()
 
                 elif command == "saving":
@@ -727,7 +725,6 @@ def play_aidungeon_2():
                     console_print("Which do you choose? ")
                     choice = get_num_options(2)
                     if choice == 0:
-                        story_manager.story.get_rating()
                         break
                     else:
                         console_print("Sorry about that...where were we?")
@@ -743,7 +740,6 @@ def play_aidungeon_2():
                     console_print("Which do you choose? ")
                     choice = get_num_options(2)
                     if choice == 0:
-                        story_manager.story.get_rating()
                         break
                     else:
                         console_print("Sorry about that...where were we?")
