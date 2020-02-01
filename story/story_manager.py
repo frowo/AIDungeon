@@ -109,18 +109,6 @@ class Story:
     def to_json(self):
         return json.dumps(self.to_dict())
 
-    def get_rating(self):
-        while True:
-            try:
-                rating = input("Please rate the story quality from 1-10: ")
-                rating_float = max(min(float(rating), 10), 1)
-            except ValueError:
-                print("Please return a valid number.")
-            else:
-                self.rating = rating_float
-                return
-
-
 class StoryManager:
     def __init__(self, generator, upload_story=True, cloud=False):
         self.generator = generator
