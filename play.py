@@ -246,8 +246,8 @@ def play_aidungeon_2():
                     context, prompt = get_curated_exposition(setting_key, character_key, name, character, setting_description)
                 if generator is None:
                     if parser['values']['model-config'] == "False":
-                        generator = GPT2Generator()
                         print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                        generator = GPT2Generator()
                     elif parser['values']['model-config'] == "True":
                         generator_config = input("Would you like to select a different generator? (default: model_v5) (y/N) ")
                         if generator_config.lower() == "y":
