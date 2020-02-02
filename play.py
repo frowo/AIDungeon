@@ -181,7 +181,7 @@ def instructions():
     text += '\n                    action.'
     text += '\n  "/retry" or "/rt" Reverts the last action and tries again with the same action.'
     text += '\n  "/alter" or "/a"  Edit the most recent AI response'
-    text += '\n  "/altergen" or "/ag" Edit the beginning of the most recent response and have the'
+    text += '\n  "/altergen" "/ag" Edit the beginning of the most recent response and have the'
     text += '\n                    AI generate the rest'
     text += '\n  "/quit"           Quits the game and saves'
     text += '\n  "/reset"          Starts a new game and saves your current one'
