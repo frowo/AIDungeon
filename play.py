@@ -177,12 +177,12 @@ def instructions():
     text += '\n ex. "!A dragon swoops down and eats Sir Theo."'
     text += '\n'
     text += "\nThe following commands can be entered for any action: "
-    text += '\n  "/revert"         Reverts the last action allowing you to pick a different'
+    text += '\n  "/revert" or "/rv"Reverts the last action allowing you to pick a different'
     text += '\n                    action.'
-    text += '\n  "/retry"          Reverts the last action and tries again with the same action.'
-    text += '\n  "/alter"          Edit the most recent AI response'
+    text += '\n  "/retry" or "/rt" Reverts the last action and tries again with the same action.'
+    text += '\n  "/alter" or "/a"  Edit the most recent AI response'
     text += '\n  "/altergen"       Edit the beginning of the most recent response and have the'
-    text += '\n                    AI generate the rest'
+    text += '\n  or "/ag"          AI generate the rest'
     text += '\n  "/quit"           Quits the game and saves'
     text += '\n  "/reset"          Starts a new game and saves your current one'
     text += '\n  "/restart"        Starts the game from beginning with same settings'
@@ -190,7 +190,7 @@ def instructions():
     text += '\n  "/saving off/on"  Turns off and on saving'
     text += '\n  "/encrypt"        Turns on encryption when saving and loading'
     text += '\n  "/autosave"       Toggle autosave on and off. Default is off.'
-    text += '\n  "/save [name]"    Save your current game or create a new save if name was supplied'
+    text += '\n  "/save [name]" or "/s" Save your current game or create a new save if name was supplied'
     text += '\n  "/load"           Asks for a save ID and loads the game if the ID is valid'
     text += '\n  "/print"          Prints a transcript of your adventure'
     text += '\n  "/help"           Prints these instructions again'
@@ -203,8 +203,8 @@ def instructions():
     text += '\n                    (higher temperature = less focused). Default is 0.4'
     text += '\n  "/top ##"         Changes the AI\'s top_p. Default is 0.9.'
     text += '\n  "/raw off/on"     Changes whether to feed the AI raw text instead of CYOA, interprets \\n as newline. (default off).'
-    text += '\n  "/remember XXX"   Commit something important to the AI\'s memory for that session.'
-    text += '\n  "/context"        Edit what your AI has currently committed to memory.'
+    text += '\n  "/remember XXX" or "/rem" Commit something important to the AI\'s memory for that session.'
+    text += '\n  "/context" or "/c"Edit what your AI has currently committed to memory.'
     return text
 
 
@@ -322,6 +322,7 @@ def play_aidungeon_2():
                 command = split[0].lower()
                 args = split[1:]
                 if command == "reset":
+                    story_manager.story.get_rating()
                     story_manager.print_save()
                     break
 
@@ -333,6 +334,7 @@ def play_aidungeon_2():
                     continue
 
                 elif command == "quit":
+                    story_manager.story.get_rating()
                     exit()
 
                 elif command == "saving":
@@ -471,7 +473,7 @@ def play_aidungeon_2():
                     else:
                         console_print(result)
 
-                elif command == "save":
+                elif command == "save" or command == "s":
                     if upload_story:
                         if len(args) == 0:
                             print("Create a new save, or overwrite the current save?")
@@ -500,7 +502,7 @@ def play_aidungeon_2():
                     else:
                         print(str(story_manager.story))
 
-                elif command == "revert":
+                elif command == "revert" or command == "rv":
                     if len(story_manager.story.actions) == 0:
                         console_print("You can't go back any farther. ")
                         continue
@@ -572,14 +574,14 @@ def play_aidungeon_2():
                     else:
                         console_print(f"Invalid argument: {args[0]}")
 
-                elif command == 'remember':
+                elif command == 'remember' or command == 'rem':
                     if len(args) == 0:
                         console_print("Failed to add to memory. Example usage: /remember that Sir Theo is a knight")
                     else:
                         story_manager.story.context += "You know " + " ".join(args[0:]) + ". "
                         console_print("You make sure to remember {}.".format(" ".join(action.split(" ")[1:])))
 
-                elif command == 'retry':
+                elif command == 'retry' or command == 'rt':
                     if len(story_manager.story.actions) > 0:
                         last_action = story_manager.story.actions.pop()
                         last_result = story_manager.story.results.pop()
@@ -604,7 +606,7 @@ def play_aidungeon_2():
                         print("\n")
                         console_print(str(story_manager.story))
 
-                elif command == 'context':
+                elif command == 'context' or command == 'c':
                     try:
                         current_context = story_manager.get_context()
                         console_print("Current story context: \n")
@@ -618,7 +620,7 @@ def play_aidungeon_2():
                         console_print("Something went wrong, cancelling.")
                         pass
 
-                elif command == 'alter':
+                elif command == 'alter' or command == 'a':
                     try:
                         console_print("\nThe AI thinks this was what happened:\n")
                         current_result = (
@@ -636,7 +638,7 @@ def play_aidungeon_2():
                         console_print("Something went wrong, cancelling.")
                         pass
 
-                elif command == 'altergen':
+                elif command == 'altergen' or command == 'ag':
                     try:
                         if len(story_manager.story.actions) > 0:
                             # temporarily remove the latest action/result pair
