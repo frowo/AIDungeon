@@ -8,7 +8,7 @@ import tensorflow as tf
 from generator.gpt2.src import encoder, model, sample
 from story.utils import *
 
-sys.path.append('AIDungeon/config.ini')
+sys.path.append('Lucidteller/config.ini')
 parser = ConfigParser()
 parser.read('config.ini')
 

@@ -166,7 +166,7 @@ def get_curated_exposition(
 
 
 def instructions():
-    text = "\nAI Dungeon 2 Instructions:"
+    text = "\nLucidteller Instructions:"
     text += '\n Enter actions starting with a verb ex. "go to the tavern" or "attack the orc"'
     text += '\n'
     text += '\n To speak enter \'say "(thing you want to say)"\''
@@ -208,9 +208,9 @@ def instructions():
     return text
 
 
-def play_aidungeon_2():
+def play_Lucidteller():
 #    console_print(
-#        "AI Dungeon 2 will save and use your actions and game to continually improve AI Dungeon."
+#        "Lucidteller will save and use your actions and game to continually improve Lucidteller."
 #        + " If you would like to disable this enter '/saving off' as an action. This will also turn off the "
 #        + "ability to save games."
 #    )
@@ -246,7 +246,7 @@ def play_aidungeon_2():
                     context, prompt = get_curated_exposition(setting_key, character_key, name, character, setting_description)
                 if generator is None:
                     if parser['values']['model-config'] == "False":
-                        print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                        print("\nInitializing Lucidteller! (This might take a few minutes)\n")
                         generator = GPT2Generator()
                     elif parser['values']['model-config'] == "True":
                         generator_config = input("Would you like to select a different generator? (default: model_v5) (y/N) ")
@@ -257,13 +257,13 @@ def play_aidungeon_2():
                                 console_print("Example user input in raw mode: He took the beast by the horns and ripped out its eyes.\\n In the distance, a horn sounded.")
                                 console_print("Example user input in regular mode: > Take beast by horns and rip out its eyes.")
                                 use_raw = input("y/N ")
-                                print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                                print("\nInitializing Lucidteller! (This might take a few minutes)\n")
                                 generator = GPT2Generator(model_name=model_name, raw=use_raw.lower()=="y")
                             except:
                                 console_print("Failed to set model. Make sure it is installed in generator/gpt2/models/")
                                 continue
                         else:
-                            print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
+                            print("\nInitializing Lucidteller! (This might take a few minutes)\n")
                             generator = GPT2Generator()
                     story_manager.generator = generator
                 if parser['values']['temp-config'] == "False":
@@ -753,4 +753,4 @@ def play_aidungeon_2():
 
 
 if __name__ == "__main__":
-    play_aidungeon_2()
+    play_Lucidteller()

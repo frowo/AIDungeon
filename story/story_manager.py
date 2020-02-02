@@ -159,7 +159,7 @@ class StoryManager:
 
         file_name = "story" + story_id + (".bin" if decrypt else ".json")
         if self.cloud:
-            cmd = "gsutil cp gs://aidungeonstories/" + file_name + " " + save_path
+            cmd = "gsutil cp gs://Lucidtellerstories/" + file_name + " " + save_path
             os.system(cmd)
 
         exists = os.path.isfile(os.path.join(save_path, file_name))
@@ -241,7 +241,7 @@ class StoryManager:
         FNULL = open(os.devnull, "w")
         if self.cloud:
             p = Popen(
-                ["gsutil", "cp", os.path.join(save_path, file_name), "gs://aidungeonstories"],
+                ["gsutil", "cp", os.path.join(save_path, file_name), "gs://Lucidtellerstories"],
                 stdout=FNULL,
                 stderr=subprocess.STDOUT,
             )

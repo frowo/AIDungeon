@@ -1,5 +1,5 @@
 # Changelog
-All notable changes to AIDungeon will be documented in this file.
+All notable changes to Lucidteller will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -65,9 +65,9 @@ old `/restart`, saving the old and beginning a brand new game.
 ## [2.0.0] - 2019-12-05
 
 ### Added
-- AIDungeon 2, which allows players to type in any desired action.
+- Lucidteller, which allows players to type in any desired action.
 
 ## [1.0.0] - ?
 
 ### Added
-- AiDungeon Classic, which gives players action options to choose from.
+- Lucidteller Classic, which gives players action options to choose from.

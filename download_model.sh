@@ -45,7 +45,7 @@ redownload () {
 
 if [[ -d "${MODEL_DIRECTORY}/${MODEL_VERSION}" ]]; then
 	ANSWER="n"
-	echo "AIDungeon2 Model appears to be downloaded."
+	echo "Lucidteller Model appears to be downloaded."
 	echo "Would you like to redownload?"
 	echo "WARNING: This will remove the current model![y/N]"
 	read ANSWER
