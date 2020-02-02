@@ -322,7 +322,6 @@ def play_aidungeon_2():
                 command = split[0].lower()
                 args = split[1:]
                 if command == "reset":
-                    story_manager.story.get_rating()
                     story_manager.print_save()
                     break
 
@@ -334,7 +333,6 @@ def play_aidungeon_2():
                     continue
 
                 elif command == "quit":
-                    story_manager.story.get_rating()
                     exit()
 
                 elif command == "saving":
