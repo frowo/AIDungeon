@@ -277,6 +277,7 @@ def play_Lucidteller():
                         console_print("Please wait while the AI model is regenerated...")
                 console_print("If you need a list of all available commands type /help")
                 print("\nGenerating story...")
+                generator.set_word_penalties(parser['penalties'])
                 story_manager.generator.generate_num = 120
                 story_manager.start_new_story(
                     prompt, context=context, upload_story=upload_story
