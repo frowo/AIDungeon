@@ -58,9 +58,10 @@ def sample_sequence(
     start_token=None,
     batch_size=None,
     context=None,
-    temperature=1,
+    temperature=None,
     #top_k=0,
-    top_p=1,
+    top_p=None,
+    word_penalties=None,
 ):
     if start_token is None:
         assert context is not None, "Specify exactly one of start_token and context!"
@@ -85,10 +86,14 @@ def sample_sequence(
 
         def body(past, prev, output):
             next_outputs = step(hparams, prev, past=past)
-            logits = next_outputs["logits"][:, -1, :] / tf.to_float(temperature)
+            if temperature is not None:
+                logits = next_outputs["logits"][:, -1, :] / temperature
+            if word_penalties is not None:
+                logits -= word_penalties
             logits = penalize_used(logits, output)
             #logits = top_k_logits(logits, k=top_k)
-            logits = top_p_logits(logits, p=top_p)
+            if top_p is not None:
+                logits = top_p_logits(logits, p=top_p)
             samples = tf.multinomial(logits, num_samples=1, output_dtype=tf.int32)
             return [
                 next_outputs["presents"]
