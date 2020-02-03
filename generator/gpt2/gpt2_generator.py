@@ -184,7 +184,7 @@ class GPT2Generator:
         self.raw = raw
 
     def set_word_penalties(self, word_penalties):
-        self.word_penalties = dict()
+        self.word_penalties=dict(parser[penalties])
         for token, index in self.enc.encoder.items():
             for word, penalty in word_penalties.items():
                 if re.search(word, token, re.IGNORECASE) is not None:
