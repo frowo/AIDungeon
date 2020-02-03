@@ -188,4 +188,7 @@ class GPT2Generator:
         for token, index in self.enc.encoder.items():
             for word, penalty in word_penalties.items():
                 if re.search(word, token, re.IGNORECASE) is not None:
-                    self.word_penalties[index] = float(penalty/math.log2(math.e))
+                    try:
+                        self.word_penalties[index] = float(float(penalty)/math.log2(math.e))
+                    except ValueError:
+                        console_print("Invalid penalty for "+word)
