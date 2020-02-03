@@ -24,8 +24,9 @@ def console_print(text, width=75):
         elif last_newline > width and text[i] == " ":
             text = text[:i] + "\n" + text[i:]
             last_newline = 0
-        else:
-            last_newline += 1
+#Further testing required to see what this change fully affected, it fixes the space added after the second line.
+#        else:
+#            last_newline += 1
         i += 1
     print(text)
 
