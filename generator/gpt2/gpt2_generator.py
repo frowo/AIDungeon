@@ -1,5 +1,7 @@
 import json
+import math
 import os
+import re
 import warnings
 import sys
 from configparser import ConfigParser
@@ -29,9 +31,11 @@ class GPT2Generator:
         self.model_name = model_name
         self.model_dir = "generator/gpt2/models"
         self.model_dir = os.path.expanduser(os.path.expandvars(self.model_dir))
+        self.word_penalties = dict()
 
         self.batch_size = 1
         self.samples = 1
+        self.vocab = 1
 
         self.enc = encoder.get_encoder(self.model_name, self.model_dir)
 
@@ -40,6 +44,10 @@ class GPT2Generator:
         self.sess = tf.compat.v1.Session(config=config)
 
         self.context = tf.placeholder(tf.int32, [self.batch_size, None])
+        self.length = tf.placeholder(tf.int32, shape=())
+        self.word_penalties_ph = tf.placeholder(tf.float32, [None])
+        self.temp_ph = tf.placeholder(tf.float32, shape=())
+        self.top_p_ph = tf.placeholder(tf.float32, shape=())
         # np.random.seed(seed)
         # tf.set_random_seed(seed)
         self.gen_output()
@@ -94,7 +102,12 @@ class GPT2Generator:
             out = self.sess.run(
                 self.output,
                 feed_dict={
-                    self.context: [context_tokens for _ in range(self.batch_size)]
+                    self.context: [context_tokens for _ in range(self.batch_size)],
+                    self.context: [context_tokens for _ in range(self.batch_size)],
+                    self.length: self.generate_num,
+                    self.temp_ph: self.temp,
+                    self.top_p_ph: self.top_p,
+                    self.word_penalties_ph: [0.0 if penalty is None else penalty for penalty in [self.word_penalties.get(i) for i in range(self.vocab)]]
                 },
             )[:, len(context_tokens) :]
             for i in range(self.batch_size):
@@ -148,26 +161,34 @@ class GPT2Generator:
         hparams = model.default_hparams()
         with open(os.path.join(models_dir, self.model_name, "hparams.json")) as f:
             hparams.override_from_dict(json.load(f))
+        self.vocab = hparams.n_vocab
         seed = np.random.randint(0, 100000)
         self.output = sample.sample_sequence(
             hparams=hparams,
-            length=self.generate_num,
+            length=self.length,
             context=self.context,
             batch_size=self.batch_size,
-            temperature=self.temp,
+            temperature=self.temp_ph,
             #top_k=self.top_k,
-            top_p=self.top_p,
+            top_p=self.top_p_ph,
+            word_penalties=self.word_penalties_ph,
         )
 
     def change_temp(self, t):
-        changed = t != self.temp
         self.temp = t
-        return changed
 
     def change_top_p(self, t):
-        changed = t != self.top_p
         self.top_p = t
-        return changed
 
     def change_raw(self, raw):
         self.raw = raw
+
+    def set_word_penalties(self, word_penalties):
+        self.word_penalties =dict()
+        for token, index in self.enc.encoder.items():
+            for word, penalty in word_penalties.items():
+                if re.search(word, token, re.IGNORECASE) is not None:
+                    try:
+                        self.word_penalties[index] = float(float(penalty)/math.log2(math.e))
+                    except ValueError:
+                        console_print("Invalid penalty for "+word)

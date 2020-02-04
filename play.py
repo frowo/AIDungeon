@@ -269,16 +269,15 @@ def play_Lucidteller():
                 if parser['values']['temp-config'] == "False":
                     story_manager.generator.change_temp(float(parser.get('values', 'temp')))
                     story_manager.generator.change_top_p(float(parser.get('values', 'top_p')))
-                    story_manager.generator.gen_output()
                 elif parser['values']['temp-config'] == "True":
                     change_config = input("Would you like to enter a new temp and top_p now? (default: 0.4, 0.9) (y/N) ")
                     if change_config.lower() == "y":
                         story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
                         story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
                         console_print("Please wait while the AI model is regenerated...")
-                        story_manager.generator.gen_output()
                 console_print("If you need a list of all available commands type /help")
                 print("\nGenerating story...")
+                generator.set_word_penalties(parser['penalties'])
                 story_manager.generator.generate_num = 120
                 story_manager.start_new_story(
                     prompt, context=context, upload_story=upload_story
@@ -532,9 +531,7 @@ def play_Lucidteller():
                         console_print("Failed to set temperature. Example usage: /temp 0.4")
                     else:
                         try:
-                            console_print("Regenerating model, please wait...")
                             story_manager.generator.change_temp(float(args[0]))
-                            story_manager.generator.gen_output()
                             console_print("Set temp to {}".format(story_manager.generator.temp))
                         except ValueError:
                             console_print("Failed to set temperature. Example usage: /temp 0.4")
@@ -546,9 +543,7 @@ def play_Lucidteller():
                         console_print("Failed to set top_p. Example usage: /top 0.9")
                     else:
                         try:
-                            console_print("Regenerating model, please wait...")
                             story_manager.generator.change_top_p(float(args[0]))
-                            story_manager.generator.gen_output()
                             console_print("Set top_p to {}".format(story_manager.generator.top_p))
                         except ValueError:
                             console_print("Failed to set top_p. Example usage: /top 0.9")
