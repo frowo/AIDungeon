@@ -217,10 +217,10 @@ def play_Lucidteller():
 #        + "ability to save games."
 #    )
 
-    upload_story = parser.get('settings', 'upload_story')
-    ping = parser.get('settings', 'ping')
+    upload_story = parser['settings']['upload_story']
+    ping = parser['settings']['ping']
     generator = None
-    autosave = parser.get('settings', 'autosave')
+    autosave = parser['settings']['autosave']
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
     print("\n")
 
