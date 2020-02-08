@@ -635,7 +635,7 @@ def play_Lucidteller():
                         pass
 
                 elif command == 'win':
-                    console_print(result + "\n CONGRATS YOU WIN")
+                    console_print("\n CONGRATS YOU WIN")
                     console_print("\nOptions:")
                     console_print("0) Start a new game")
                     console_print(
@@ -650,7 +650,7 @@ def play_Lucidteller():
                         console_print(result)
 
                 elif command == 'lose':
-                    console_print(result + "\n YOU DIED. GAME OVER")
+                    console_print("\n YOU DIED. GAME OVER")
                     console_print("\nOptions:")
                     console_print("0) Start a new game")
                     console_print(
