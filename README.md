@@ -1,7 +1,8 @@
 # Frowo's Lucidteller fork
 
 All credit goes to Thadunge2, as well as the contributors of <a href="https://www.github.com/VBPXKSMI/Open-CYOAI-Project">Open-CYOAI Project </a> and 4chan's anons<br>
-A massive thank you to the /aids/ anon who singlehandedly worked on the word penalties system, and helped my absolutely fried brain implementing it properly
+A massive thank you to the /aids/ anon who singlehandedly worked on the word penalties system, and helped my absolutely fried brain implementing it properly <br>
+While this repository is under AGPL due to thadunge using it, I don't care much about getting credit for the things I changed, take them, do whatever you want with them, I personally don't care
 
 Don't expect anything, I am a brainlet, this is for fun
 
