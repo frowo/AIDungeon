@@ -218,7 +218,7 @@ def play_Lucidteller():
 #    )
 
     upload_story = parser['settings']['upload_story']
-    ping = parser['settings']['ping']
+    ping = False
     generator = None
     autosave = parser['settings']['autosave']
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
