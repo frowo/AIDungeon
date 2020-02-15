@@ -177,7 +177,7 @@ def instructions():
     text += '\n ex. "!A dragon swoops down and eats Sir Theo."'
     text += '\n'
     text += "\nThe following commands can be entered for any action: "
-    text += '\n  "/revert" or "/rv"Reverts the last action allowing you to pick a different'
+    text += '\n  "/revert" "/rv"   Reverts the last action allowing you to pick a different'
     text += '\n                    action.'
     text += '\n  "/retry" or "/rt" Reverts the last action and tries again with the same action.'
     text += '\n  "/alter" or "/a"  Edit the most recent AI response'
@@ -203,8 +203,10 @@ def instructions():
     text += '\n                    (higher temperature = less focused). Default is 0.4'
     text += '\n  "/top ##"         Changes the AI\'s top_p. Default is 0.9.'
     text += '\n  "/raw off/on"     Changes whether to feed the AI raw text instead of CYOA, interprets \\n as newline. (default off).'
-    text += '\n  "/remember XXX" or "/rem" Commit something important to the AI\'s memory for that session.'
-    text += '\n  "/context" or "/c"Edit what your AI has currently committed to memory.'
+    text += '\n  "/remember X" "/rem" Commit something important to the AI\'s memory for that session.'
+    text += '\n  "/context" "/c"   Edit what your AI has currently committed to memory.'
+    text += '\n  "/win"            Makes you win the session'
+    text += '\n  "/lose"           Makes you lose the session'
     return text
 
 
@@ -215,19 +217,20 @@ def play_Lucidteller():
 #        + "ability to save games."
 #    )
 
-    upload_story = True
-    ping = False
+    upload_story = parser.getboolean('settings', 'upload_story')
+    ping = parser.getboolean('settings', 'ping')
     generator = None
-    autosave = parser.get('values', 'autosave')
+    autosave = parser.getboolean('settings', 'autosave')
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
     print("\n")
 
-#    ranBanner =  bannerRan()
-#    openingPass = (ranBanner.banner_number)
-#
-#    with open(openingPass, "r", encoding="utf-8") as file:
-#        starter = file.read()
-#    print(starter)
+    if parser['settings']['banner'] == "True":
+        ranBanner =  bannerRan()
+        openingPass = (ranBanner.banner_number)
+
+        with open(openingPass, "r", encoding="utf-8") as file:
+            starter = file.read()
+        print(starter)
 
     while True:
         if story_manager.story is not None:
@@ -245,10 +248,10 @@ def play_Lucidteller():
                 else:
                     context, prompt = get_curated_exposition(setting_key, character_key, name, character, setting_description)
                 if generator is None:
-                    if parser['values']['model-config'] == "False":
+                    if parser['settings']['model-config'] == "False":
                         print("\nInitializing Lucidteller! (This might take a few minutes)\n")
                         generator = GPT2Generator()
-                    elif parser['values']['model-config'] == "True":
+                    elif parser['settings']['model-config'] == "True":
                         generator_config = input("Would you like to select a different generator? (default: model_v5) (y/N) ")
                         if generator_config.lower() == "y":
                             try:
@@ -266,10 +269,10 @@ def play_Lucidteller():
                             print("\nInitializing Lucidteller! (This might take a few minutes)\n")
                             generator = GPT2Generator()
                     story_manager.generator = generator
-                if parser['values']['temp-config'] == "False":
+                if parser['settings']['temp-config'] == "False":
                     story_manager.generator.change_temp(float(parser.get('values', 'temp')))
                     story_manager.generator.change_top_p(float(parser.get('values', 'top_p')))
-                elif parser['values']['temp-config'] == "True":
+                elif parser['settings']['temp-config'] == "True":
                     change_config = input("Would you like to enter a new temp and top_p now? (default: 0.4, 0.9) (y/N) ")
                     if change_config.lower() == "y":
                         story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
@@ -278,7 +281,7 @@ def play_Lucidteller():
                 console_print("If you need a list of all available commands type /help")
                 print("\nGenerating story...")
                 generator.set_word_penalties(parser['penalties'])
-                story_manager.generator.generate_num = 120
+                story_manager.generator.generate_num = parser.getint('values', 'gen-num-beg')
                 story_manager.start_new_story(
                     prompt, context=context, upload_story=upload_story
                 )
@@ -631,6 +634,36 @@ def play_Lucidteller():
                         console_print("Something went wrong, cancelling.")
                         pass
 
+                elif command == 'win':
+                    console_print("\n CONGRATS YOU WIN")
+                    console_print("\nOptions:")
+                    console_print("0) Start a new game")
+                    console_print(
+                        "1) \"I'm not done yet!\" (If you didn't actually win) "
+                    )
+                    console_print("Which do you choose? ")
+                    choice = get_num_options(2)
+                    if choice == 0:
+                        break
+                    else:
+                        console_print("Sorry about that...where were we?")
+                        console_print(result)
+
+                elif command == 'lose':
+                    console_print("\n YOU DIED. GAME OVER")
+                    console_print("\nOptions:")
+                    console_print("0) Start a new game")
+                    console_print(
+                        "1) \"I'm not dead yet!\" (If you didn't actually die) "
+                    )
+                    console_print("Which do you choose? ")
+                    choice = get_num_options(2)
+                    if choice == 0:
+                        break
+                    else:
+                        console_print("Sorry about that...where were we?")
+                        console_print(result)
+
                 elif command == 'altergen' or command == 'ag':
                     try:
                         if len(story_manager.story.actions) > 0:
@@ -685,7 +718,7 @@ def play_Lucidteller():
                     action = "\n" + action + "\n"
 
                     if "say" in action or "ask" in action or "\"" in action:
-                        story_manager.generator.generate_num = 120
+                        story_manager.generator.generate_num = parser.getint('values', 'gen-num-dialogue')
                 else:
                     action = action.replace("\\n", "\n")
 
