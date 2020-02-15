@@ -24,6 +24,9 @@ parser = ConfigParser()
 parser.read('config.ini')
 
 def splash():
+# Removes and readds the 'penalties_temp' section from the ini, wiping it effectively clean.
+    parser.remove_section('penalties_temp')
+    parser.add_section('penalties_temp')
     print("0) New Game\n1) Load Game\n")
     choice = get_num_options(2)
 
@@ -195,6 +198,8 @@ def instructions():
     text += '\n  "/print"          Prints a transcript of your adventure'
     text += '\n  "/help"           Prints these instructions again'
     text += '\n  "/showstats"      Prints the current game settings'
+    #Added the /showpenalties command to the list. Check line 432.
+    text += '\n  "/showpenalties"  Prints the current word penalties'
     text += '\n  "/censor off/on"  Turn censoring off or on.'
     text += '\n  "/ping off/on"    Turn playing a ping sound when the AI responds off or on.'
     text += '\n                    (not compatible with Colab)'
@@ -277,10 +282,25 @@ def play_Lucidteller():
                     if change_config.lower() == "y":
                         story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
                         story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
-                        console_print("Please wait while the AI model is regenerated...")
-                console_print("If you need a list of all available commands type /help")
+                #Checks whether to use temp penalties or not, then allows the user to type in words, followed by their penalization value until he types 'STOP' in all-caps. The entered word-value pairs are then added to 'penalties-temp'
+                if parser['settings']['custompenalties'] == "True":
+                    more_word = ""
+                    while more_word != "STOP":
+                        more_word = str(input("\nType STOP to stop adding words. Otherwise enter a word you'd like to penalize/encourage:    "))
+                        if more_word == "STOP":
+                            break
+                        else:
+                            parser.set('penalties_temp', more_word, input("Enter a numeric value. Negatives encourage, positives penalize word usage:    "))
                 print("\nGenerating story...")
-                generator.set_word_penalties(parser['penalties'])
+                #Defines merger as dict, and adds nothing to it in further repetitions.
+                merger = {}
+                #Not sure if really necessary, but clears out the contents of merger
+                merger.clear()
+                #Loads the word-value pairs from the penalties and penalties_temp section into the dictionary, overwriting values in case the user typed in a temp penalty he already added to the config.ini beforehand.
+                merger.update(parser['penalties'])
+                merger.update(parser['penalties_temp'])
+                #Loads from the merger dictionary instead of from the 'penalties' section in the .ini. Thank god ConfigParser's parsing has a similar structure to a dictionary, otherwise this wouldn't work.
+                generator.set_word_penalties(merger)
                 story_manager.generator.generate_num = parser.getint('values', 'gen-num-beg')
                 story_manager.start_new_story(
                     prompt, context=context, upload_story=upload_story
@@ -407,6 +427,13 @@ def play_Lucidteller():
                     text += "\ntop_p is set to:       " + str(story_manager.generator.top_p)
                     text += "\ncurrent model is:      " + story_manager.generator.model_name
                     text += "\nraw is set to:         " + str(story_manager.generator.raw)
+                    print(text)
+                
+                #Prints the word-value pairs from the merger dict.
+                elif command == "showpenalties":
+                    text = "The word penalties are:        "
+                    for x in merger.keys():
+                        text += "\n" + str(x) + " => " + str(merger[x])
                     print(text)
 
                 elif command == "censor":
