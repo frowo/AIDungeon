@@ -282,6 +282,8 @@ def play_Lucidteller():
                     if change_config.lower() == "y":
                         story_manager.generator.change_temp(float(input("Enter a new temp (default 0.4): ") or parser.get('values', 'temp')))
                         story_manager.generator.change_top_p(float(input("Enter a new top_p (default 0.9): ") or parser.get('values', 'top_p')))
+                        console_print("Please wait while the AI model is regenerated...")
+                console_print("If you need a list of all available commands type /help")
                 #Checks whether to use temp penalties or not, then allows the user to type in words, followed by their penalization value until he types 'STOP' in all-caps. The entered word-value pairs are then added to 'penalties-temp'
                 if parser['settings']['custompenalties'] == "True":
                     more_word = ""
