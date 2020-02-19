@@ -6,7 +6,7 @@ While this repository is under AGPL due to thadunge using it, I don't care much 
 
 Don't expect anything, I am a brainlet, this is for fun
 
-**Contact: fro_aid@protonmail.com**
+**Contact: fro_aid@protonmail.com or @frowo:matrix.org**
 <br> **Matrix room: <a href="https://matrix.to/#/!gvXKMeHZohRsWvAMnL:matrix.org?via=matrix.org">#AIDungeon:matrix.org</a>** 
 
 **Goal of this fork**
