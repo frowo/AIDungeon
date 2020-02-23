@@ -338,7 +338,7 @@ def play_Lucidteller():
 
         while True:
             if autosave and upload_story:
-                story_manager.save_story()
+                story_manager.save_story("autosave", overwrite)
             sys.stdin.flush()
             action = input("\n> ").strip()
             if len(action) > 0 and action[0] == "/":
