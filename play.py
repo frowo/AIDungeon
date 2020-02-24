@@ -193,6 +193,7 @@ def instructions():
     text += '\n  "/saving off/on"  Turns off and on saving'
     text += '\n  "/encrypt"        Turns on encryption when saving and loading'
     text += '\n  "/autosave"       Toggle autosave on and off. Default is off.'
+    text += '\n  "/autoname"       Changes the name of the autosave file, default is autosave'
     text += '\n  "/save [name]" or "/s" Save your current game or create a new save if name was supplied'
     text += '\n  "/load"           Asks for a save ID and loads the game if the ID is valid'
     text += '\n  "/print"          Prints a transcript of your adventure'
@@ -228,6 +229,7 @@ def play_Lucidteller():
     autosave = parser.getboolean('settings', 'autosave')
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
     print("\n")
+    autoname = parser['settings']['autoname']
 
     if parser['settings']['banner'] == "True":
         ranBanner =  bannerRan()
@@ -338,7 +340,7 @@ def play_Lucidteller():
 
         while True:
             if autosave and upload_story:
-                story_manager.save_story("autosave", overwrite)
+                story_manager.save_story(autoname, True)
             sys.stdin.flush()
             action = input("\n> ").strip()
             if len(action) > 0 and action[0] == "/":
@@ -415,6 +417,13 @@ def play_Lucidteller():
                     else:
                         console_print(f"Invalid argument: {args[0]}")
 
+                elif command == "autoname":
+                    if len(args) == 0:
+                        console_print("Name of the autosave is " + autoname)
+                    else:
+                        autoname = args[0]
+                        console_print("name of the file was changed")
+
                 elif command == "help":
                     console_print(instructions())
 
@@ -430,7 +439,7 @@ def play_Lucidteller():
                     text += "\ncurrent model is:      " + story_manager.generator.model_name
                     text += "\nraw is set to:         " + str(story_manager.generator.raw)
                     print(text)
-                
+
                 #Prints the word-value pairs from the merger dict.
                 elif command == "showpenalties":
                     text = "The word penalties are:        "
